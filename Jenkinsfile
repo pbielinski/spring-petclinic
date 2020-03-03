@@ -16,7 +16,7 @@ node {
    stage("Deploy") {
      stage("Test") {
         sshagent(['petclinic']) {
-           sh("scp -oStrictHostKeyChecking=no *.jar '${USER_NAME}@${HOST}:${PATH}'")
+           sh("scp -oStrictHostKeyChecking=no target/*.jar '${USER_NAME}@${HOST}:${PATH}'")
            sh("scp -oStrictHostKeyChecking=no build/Dockerfile '${USER_NAME}@${HOST}:${PATH}'")
            sh("scp -oStrictHostKeyChecking=no build/docker-compose.yml '${USER_NAME}@${HOST}:${PATH}'")
            sh("ssh -oStrictHostKeyChecking=no -t ${USER_NAME}@${HOST}:${PATH} 'cd ${PATH}; docker-compose build'")
