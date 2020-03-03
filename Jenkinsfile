@@ -23,8 +23,8 @@ node {
         sh("scp -oStrictHostKeyChecking=no target/*.jar '${USER_NAME}@${HOST}:${PATH}/app.jar'")
         sh("scp -oStrictHostKeyChecking=no build/Dockerfile '${USER_NAME}@${HOST}:${PATH}/Dockerfile'")
         sh("scp -oStrictHostKeyChecking=no build/docker-compose.yml '${USER_NAME}@${HOST}:${PATH}/docker-compose.yml'")
-        sh("ssh -oStrictHostKeyChecking=no -t ${USER_NAME}@${HOST} \\'cd ${PATH}; docker-compose build\\'")
-        sh("ssh -oStrictHostKeyChecking=no -t ${USER_NAME}@${HOST} \\'cd ${PATH}; docker-compose up -d\\'")
+        sh("ssh -oStrictHostKeyChecking=no ${USER_NAME}@${HOST} \\\"cd ${PATH}; docker-compose build\\\"")
+        sh("ssh -oStrictHostKeyChecking=no ${USER_NAME}@${HOST} \\\"cd ${PATH}; docker-compose up -d\\\"")
      }
    }
    stage('Results') {
