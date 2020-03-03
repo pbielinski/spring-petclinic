@@ -16,11 +16,11 @@ node {
    }
    stage("Deploy") {
      sshagent(['petclinic']) {
-        sh("scp -oStrictHostKeyChecking=no target/*.jar '${env.USER_NAME}@${env.HOST}:${env.PATH}/app.jar'")
-        sh("scp -oStrictHostKeyChecking=no build/Dockerfile '${env.USER_NAME}@${HOST}:${env.PATH}/Dockerfile'")
-        sh("scp -oStrictHostKeyChecking=no build/docker-compose.yml '${env.USER_NAME}@${env.HOST}:${env.PATH}/docker-compose.yml'")
-        sh("ssh -oStrictHostKeyChecking=no ${env.USER_NAME}@${env.HOST} 'docker-compose -f ${env.PATH}/docker-compose.yml build'")
-        sh("ssh -oStrictHostKeyChecking=no ${env.USER_NAME}@${env.HOST} 'docker-compose -f ${env.PATH}/docker-compose.yml up -d'")
+        sh("scp -oStrictHostKeyChecking=no target/*.jar '${env.USER_NAME}@${env.HOST}:${env.HOST_PATH}/app.jar'")
+        sh("scp -oStrictHostKeyChecking=no build/Dockerfile '${env.USER_NAME}@${HOST}:${env.HOST_PATH}/Dockerfile'")
+        sh("scp -oStrictHostKeyChecking=no build/docker-compose.yml '${env.USER_NAME}@${env.HOST}:${env.HOST_PATH}/docker-compose.yml'")
+        sh("ssh -oStrictHostKeyChecking=no ${env.USER_NAME}@${env.HOST} 'docker-compose -f ${env.HOST_PATH}/docker-compose.yml build'")
+        sh("ssh -oStrictHostKeyChecking=no ${env.USER_NAME}@${env.HOST} 'docker-compose -f ${env.HOST_PATH}/docker-compose.yml up -d'")
      }
    }
    stage('Results') {
