@@ -1,5 +1,5 @@
 HOST="192.168.13.4"
-PATH="/opt/xtrack/petclinic/"
+PATH="/opt/xtrack/petclinic"
 USER_NAME="p.bielinski"
 
 node {
@@ -14,14 +14,12 @@ node {
       }
    }
    stage("Deploy") {
-     stage("Test") {
-        sshagent(['petclinic']) {
-           sh("scp -oStrictHostKeyChecking=no target/*.jar '${USER_NAME}@${HOST}:${PATH}/app.jar'")
-           sh("scp -oStrictHostKeyChecking=no build/Dockerfile '${USER_NAME}@${HOST}:${PATH}/Dockerfile'")
-           sh("scp -oStrictHostKeyChecking=no build/docker-compose.yml '${USER_NAME}@${HOST}:${PATH}/docker-compose.yml'")
-           sh("ssh -oStrictHostKeyChecking=no -t ${USER_NAME}@${HOST}:${PATH} 'cd ${PATH}; docker-compose build'")
-           sh("ssh -oStrictHostKeyChecking=no -t ${USER_NAME}@${HOST}:${PATH} 'cd ${PATH}; docker-compose up -d'")
-        }
+     sshagent(['petclinic']) {
+        sh("scp -oStrictHostKeyChecking=no target/*.jar '${USER_NAME}@${HOST}:${PATH}/app.jar'")
+        sh("scp -oStrictHostKeyChecking=no build/Dockerfile '${USER_NAME}@${HOST}:${PATH}/Dockerfile'")
+        sh("scp -oStrictHostKeyChecking=no build/docker-compose.yml '${USER_NAME}@${HOST}:${PATH}/docker-compose.yml'")
+        sh("ssh -oStrictHostKeyChecking=no -t ${USER_NAME}@${HOST}:${PATH} 'cd ${PATH}; docker-compose build'")
+        sh("ssh -oStrictHostKeyChecking=no -t ${USER_NAME}@${HOST}:${PATH} 'cd ${PATH}; docker-compose up -d'")
      }
    }
    stage('Results') {
