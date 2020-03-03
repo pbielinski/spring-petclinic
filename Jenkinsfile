@@ -11,6 +11,6 @@ node {
    }
    stage('Results') {
       junit '**/target/surefire-reports/TEST-*.xml'
-      archiveArtifacts 'target/*.jar,Dockerfile'
+      archiveArtifacts 'target/*.jar,build/*'
    }
 }
