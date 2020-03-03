@@ -1,0 +1,8 @@
+version: '2'
+services:
+  petclinic:
+    build: .
+    image: petclinic
+    restart: unless-stopped
+    ports:
+      - '56668:8080'
