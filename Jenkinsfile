@@ -5,7 +5,12 @@ USER_NAME="p.bielinski"
 node {
    def mvnHome
    stage('Preparation') { // for display purposes
-      git 'https://github.com/spring-projects/spring-petclinic.git'
+      checkout([
+         $class: 'GitSCM',
+         branches: scm.branches,
+         extensions: scm.extensions + [[$class: 'CleanCheckout']],
+         userRemoteConfigs: scm.userRemoteConfigs
+       ])
       mvnHome = tool 'M3'
    }
    stage('Build') {
