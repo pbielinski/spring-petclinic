@@ -5,4 +5,4 @@ services:
     image: petclinic
     restart: unless-stopped
     ports:
-      - '56668:8080'
+      - '${EXTERNAL_PORT}:8080'
