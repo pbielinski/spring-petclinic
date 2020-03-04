@@ -1,3 +1,6 @@
+HOST_PORT=''
+HOST_URL=''
+
 node {
    def mvnHome
    stage('Preparation') { // for display purposes
@@ -8,6 +11,14 @@ node {
          userRemoteConfigs: scm.userRemoteConfigs
        ])
       mvnHome = tool 'M3'
+      
+      def hostWithPort = env.HOST.split(':')
+      if(hostWithPort.length == 1) {
+         HOST_PORT = '22'
+      } else {
+         HOST_PORT = hostWithPort[1]
+      }
+      HOST_URL = hostWithPort[0]
    }
    stage('Build') {
       withEnv(["MVN_HOME=$mvnHome"]) {
@@ -16,11 +27,11 @@ node {
    }
    stage("Deploy") {
      sshagent(['petclinic']) {
-        sh("scp -oStrictHostKeyChecking=no target/*.jar '${env.USER_NAME}@${env.HOST}:${env.HOST_PATH}/app.jar'")
-        sh("scp -oStrictHostKeyChecking=no build/Dockerfile '${env.USER_NAME}@${HOST}:${env.HOST_PATH}/Dockerfile'")
-        sh("scp -oStrictHostKeyChecking=no build/docker-compose.yml '${env.USER_NAME}@${env.HOST}:${env.HOST_PATH}/docker-compose.yml'")
-        sh("ssh -oStrictHostKeyChecking=no ${env.USER_NAME}@${env.HOST} 'docker-compose -f ${env.HOST_PATH}/docker-compose.yml build'")
-        sh("ssh -oStrictHostKeyChecking=no ${env.USER_NAME}@${env.HOST} 'docker-compose -f ${env.HOST_PATH}/docker-compose.yml up -d'")
+        sh("scp -oStrictHostKeyChecking=no -P ${HOST_PORT} target/*.jar '${env.USER_NAME}@${HOST_URL}:${env.HOST_PATH}/app.jar'")
+        sh("scp -oStrictHostKeyChecking=no -P ${HOST_PORT} build/Dockerfile '${env.USER_NAME}@${HOST_URL}:${env.HOST_PATH}/Dockerfile'")
+        sh("scp -oStrictHostKeyChecking=no -P ${HOST_PORT} build/docker-compose.yml '${env.USER_NAME}@${HOST_URL}:${env.HOST_PATH}/docker-compose.yml'")
+        sh("ssh -oStrictHostKeyChecking=no ${env.USER_NAME}@${HOST_URL} -p ${HOST_PORT} 'docker-compose -f ${env.HOST_PATH}/docker-compose.yml build'")
+        sh("ssh -oStrictHostKeyChecking=no ${env.USER_NAME}@${HOST_URL} -p ${HOST_PORT} 'docker-compose -f ${env.HOST_PATH}/docker-compose.yml up -d'")
      }
    }
    stage('Results') {
